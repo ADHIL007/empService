@@ -19,40 +19,41 @@ namespace empService.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateUser(CreateUserRequest dto)
+        public async Task<IActionResult> CreateUser(CreateUserRequest dto)
         {
-            var user = _userService.CreateUser(dto);
+            var user = await _userService.CreateUserAsync(dto);
             return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
         }
 
         [HttpGet]
-        public IActionResult GetAllUsers()
+        public async Task<IActionResult> GetAllUsers()
         {
-            return Ok(_userService.GetAllUsers());
+            var users = await _userService.GetAllUsersAsync();
+            return Ok(users);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetUserById(int id)
+        public async Task<IActionResult> GetUserById(int id)
         {
-            var user = _userService.GetUserById(id);
+            var user = await _userService.GetUserByIdAsync(id);
 
             return Ok(user);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUserEmail(int id, UpdateUserEmail dto)
+        public async Task<IActionResult> UpdateUserEmail(int id, UpdateUserEmail dto)
         {
-            var updatedUser = _userService.UpdateUserEmail(id, dto.Email);
+            var updatedUser = await _userService.UpdateUserEmailAsync(id, dto.Email);
 
 
             return Ok(updatedUser);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
 
-            _userService.DeleteUserByID(id);
+            await _userService.DeleteUserByIDAsync(id);
 
             return NoContent();
 

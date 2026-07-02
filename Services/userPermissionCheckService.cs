@@ -1,16 +1,16 @@
-using empService.Entities;
+//using empService.Entities;
 
-namespace empService.Services
-{
-    public class UserPermissionCheckService
-    {
+//namespace empService.Services
+//{
+//    public class UserPermissionCheckService
+//    {
 
 
-        public bool HasPermission(User user, string permission)
-        {
+//        public bool HasPermission(User user, string permission)
+//        {
 
-            return user.Permissions.Contains(permission);
+//            return user.Permissions.Contains(permission);
 
-        }
-    }
-}
+//        }
+//    }
+//}

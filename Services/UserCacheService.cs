@@ -38,6 +38,7 @@ namespace empService.Services
         void IUserCacheService.AddOrUpdateCache(User newuser)
         {
             _cache.AddOrUpdate(newuser.Id, newuser, (key, existingUser) => newuser);
+
         }
 
         void IUserCacheService.RemoveUserFromCache(int id)

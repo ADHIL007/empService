@@ -4,14 +4,13 @@ namespace empService.Repositories
 {
     public interface IUserRepository
     {
-        User Add(User user);
+        Task<User> AddAsync(User user);
 
-        List<User> GetAll();
+        Task<List<User>> GetAllAsync();
 
-        User? GetById(int id);
-
+        Task<User?> GetByIdAsync(int id);
         void Delete(User user);
 
-        void Save();
+        Task SaveAsync();
     }
 }

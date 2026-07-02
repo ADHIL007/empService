@@ -5,12 +5,12 @@ namespace empService.Services
 {
     public interface IUserService
     {
-        User CreateUser(CreateUserRequest dto);
-        List<User> GetAllUsers();
-        User GetUserById(int id);
+        Task<User> CreateUserAsync(CreateUserRequest dto);
+        Task<List<User>> GetAllUsersAsync();
+        Task<User> GetUserByIdAsync(int id);
 
-        User UpdateUserEmail(int id, string email);
+        Task<User> UpdateUserEmailAsync(int id, string email);
 
-        void DeleteUserByID(int id);
+        Task DeleteUserByIDAsync(int id);
     }
 }

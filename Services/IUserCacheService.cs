@@ -9,7 +9,6 @@ namespace empService.Services
         void AddUserToCache(User user);
         User? GetUserFromCache(int id);
         void AddOrUpdateCache(User user);
-
         void RemoveUserFromCache(int id);
         void ClearCache();
     }

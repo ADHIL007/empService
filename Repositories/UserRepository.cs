@@ -1,5 +1,6 @@
 using empService.Data;
 using empService.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace empService.Repositories
 {
@@ -11,11 +12,11 @@ namespace empService.Repositories
             _dbContext = appDbContext;
 
         }
-        User IUserRepository.Add(User user)
+        async Task<User> IUserRepository.AddAsync(User user)
         {
-            _dbContext.Users.Add(user);
+            User user_ = (await _dbContext.Users.AddAsync(user)).Entity;
 
-            return user;
+            return user_;
 
         }
 
@@ -24,21 +25,21 @@ namespace empService.Repositories
             _dbContext.Users.Remove(user);
         }
 
-        List<User> IUserRepository.GetAll()
+        async Task<List<User>> IUserRepository.GetAllAsync()
         {
-            return _dbContext.Users.Where(user => string.IsNullOrEmpty(user.Email) == false && user.Email.EndsWith("@gmail.com") && user.Name.StartsWith("A")).ToList();
+            return await _dbContext.Users.Where(user => string.IsNullOrEmpty(user.Email) == false && user.Email.EndsWith("@gmail.com") && user.Name.StartsWith("A")).AsNoTracking().ToListAsync();
 
 
         }
 
-        User? IUserRepository.GetById(int id)
+        async Task<User?> IUserRepository.GetByIdAsync(int id)
         {
-            return _dbContext.Users.Find(id);
+            return await _dbContext.Users.FindAsync(id);
         }
 
-        void IUserRepository.Save()
+        async Task IUserRepository.SaveAsync()
         {
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
         }
     }
