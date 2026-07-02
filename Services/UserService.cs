@@ -16,7 +16,11 @@ namespace empService.Services
             {
 
                 Name = dto.Name,
-                Email = dto.Email
+                Email = dto.Email,
+                Password = dto.Password,
+                Department = dto.Department,
+
+
 
             };
 

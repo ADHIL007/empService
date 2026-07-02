@@ -3,6 +3,7 @@ using empService.Data;
 using empService.Extensions;
 using empService.Middleware;
 using Serilog;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .WriteTo.Console()
@@ -11,19 +12,21 @@ Log.Logger = new LoggerConfiguration()
 
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.UseSerilog();
 
+
+builder.Host.UseSerilog();
+builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddAppServices();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerJwtSecurity();
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddDepositories();
 var app = builder.Build();
@@ -32,15 +35,16 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
-
 app.UseCors(builder =>
 {
     builder.AllowAnyOrigin()
            .AllowAnyMethod()
            .AllowAnyHeader();
 });
+app.UseAuthentication();
+app.UseAuthorization();
+
+
 
 
 // Configure the HTTP request pipeline.
