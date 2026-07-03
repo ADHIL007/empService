@@ -5,9 +5,9 @@ namespace empService.DTOs
     public class UserLoginDTO
     {
         [Required]
-        public required String Name { get; set; }
+        public required String email { get; set; }
         [Required]
-        public required string Password { get; set; }
+        public required string password { get; set; }
 
     }
 

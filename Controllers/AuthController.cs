@@ -2,13 +2,14 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using empService.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace empService.Controllers
 {
     [ApiController]
-    [Route("/api/[Controller]")]
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
 
@@ -20,25 +21,25 @@ namespace empService.Controllers
         }
 
 
-
-        [HttpPost("/login")]
+        [AllowAnonymous]
+        [HttpPost("login")]
         public IActionResult Login([FromBody] UserLoginDTO loginDTO)
         {
-            if (loginDTO.Name == "admin" && loginDTO.Password == "admin")
+            if (loginDTO.email == "admin" && loginDTO.password == "admin")
             {
-                var Token = GenerateJwtToken(loginDTO.Name);
-                return Ok(Token);
+                var response = GenerateJwtToken(loginDTO.email);
+                return Ok(response);
             }
 
             return Unauthorized(new { message = "Invalid username or password credentials." });
         }
 
-        private String GenerateJwtToken(String username)
+        private LoginResponseDTO GenerateJwtToken(String username)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
+             var expiresAt = DateTime.UtcNow.AddMinutes(15);
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, username),
@@ -51,11 +52,15 @@ namespace empService.Controllers
                 issuer: jwtSettings["Issuer"],
                 audience: jwtSettings["Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(15),
+                expires: expiresAt,
                 signingCredentials: creds
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new LoginResponseDTO
+    {
+        Token = new JwtSecurityTokenHandler().WriteToken(token),
+        ExpiresAt = expiresAt
+    };
         }
     }
 }
